@@ -11,3 +11,10 @@ Concurrent Linked List Implementations in C++
 - [Optimistic Synchronization](src/optimisticList.h)
 - [Lazy Synchronization](src/lazyList.h)
 - Lock-Free (TODO)
+
+## How to test
+
+```
+make
+./linktest <threadCount>
+```
