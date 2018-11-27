@@ -12,8 +12,9 @@ Concurrent Linked List Implementations in C++
 - [Lazy Synchronization](src/lazyList.h)
 - Lock-Free (TODO)
 
-## How to test
+## How to Test
 
+#### Testing of all synchronization methods is provided by [linktest](src/linktest.cpp).
 ```
 make
 ./linktest <threadCount>
