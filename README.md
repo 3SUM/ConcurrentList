@@ -1,10 +1,10 @@
 # Concurrent Linked List
 
-Concurrent Linked List Implementations
+Concurrent Linked List Implementations in C++
 
 ## Contents
 
-#### Methods
+#### Synchronization Methods
 
 - [Coarse-Grained Synchronization](src/coarseList.h)
 - [Fine-Grained Synchronization](src/fineList.h)
