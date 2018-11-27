@@ -19,3 +19,7 @@ Concurrent Linked List Implementations in C++
 make
 ./linktest <threadCount>
 ```
+
+## Contact
+
+email: mayafluis@gmail.com
