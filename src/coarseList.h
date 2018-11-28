@@ -71,7 +71,7 @@ bool coarseList<T> :: contains(T key)
     // Acquire lock
     lock_guard<mutex>guard(lock);
 
-    Node *pred = head;
+    //Node *pred = head;
     Node *curr = head->next;
 
     // While not at the of the linked list
@@ -81,7 +81,7 @@ bool coarseList<T> :: contains(T key)
             break;
 
         // Set pred to curr node
-        pred = curr;
+        //pred = curr;
 
         // Set curr to next node
         curr = curr->next;

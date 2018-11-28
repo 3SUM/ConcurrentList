@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     const char	*unbold = "\033[0m";
     string		stars = "";
     string      bars = "";
-    unsigned long threadCount = 0;
+    int threadCount = 0;
     stringstream mySS;
 
     stars.append(65, '*');
