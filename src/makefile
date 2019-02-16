@@ -3,20 +3,20 @@
 # Makefile for linkedList
 
 
-OBJS 	= linktest.o
+OBJS 	= heavytest.o
 CC		= g++ -Wall -pedantic -g -std=c++11 -pthread
-DEPS	= coarseList.h fineList.h optimisticList.h lazyList.h
+DEPS	= coarseList.h fineList.h optimisticList.h lazyList.h lockFreeList.h
 
-all: linktest
+all: heavytest
 
-linktest: linktest.cpp $(OBJS)
-	$(CC) -o linktest $(OBJS)
+heavytest: heavytest.cpp $(OBJS)
+	$(CC) -o heavytest $(OBJS)
 
-linktest.o: linktest.cpp $(DEPS)
-	$(CC) -c linktest.cpp
+heavytest.o: heavytest.cpp $(DEPS)
+	$(CC) -c heavytest.cpp
 
 # -----
 # clean by removing object files.
 
 clean:
-	rm	$(OBJS) linktest
+	rm	$(OBJS) heavytest

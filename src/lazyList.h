@@ -29,6 +29,7 @@ public:
     bool add(T);
     bool remove(T);
     void printList();
+    void deleteList();
 private:
     struct Node {
         T key;
@@ -66,13 +67,7 @@ lazyList<T> :: lazyList()
 template <class T>
 lazyList<T> :: ~lazyList()
 {
-    Node *temp;
-
-    while(head->next != tail) {
-        temp = head->next;
-        head->next = temp->next;
-        delete temp;
-    }
+    deleteList();
 
     delete head;
     delete tail;
@@ -250,4 +245,30 @@ template <class T>
 bool lazyList<T> :: validate(Node *pred, Node *curr)
 {
     return  (!pred->marked && !curr->marked && pred->next == curr);
+}
+
+/*************************************************************************
+ * Delete contents of linked list
+ * **********************************************************************/
+template <class T>
+void lazyList<T> :: deleteList()
+{
+    Node *temp;
+
+    while(head->next != tail) {
+        temp = head->next;
+        head->next = temp->next;
+        delete temp;
+    }
+
+    head = new Node;
+    head->key = {};
+    head->marked = false;
+
+    tail = new Node;
+    tail->key = {};
+    tail->marked = false;
+    tail->next = NULL;
+
+    head->next = tail;
 }

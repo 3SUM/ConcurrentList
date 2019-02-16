@@ -23,11 +23,11 @@ class optimisticList
 public:
     optimisticList();
     ~optimisticList();
-
     bool contains(T);
     bool add(T);
     bool remove(T);
     void printList();
+    void deleteList();
 private:
     struct Node {
         T key;
@@ -62,13 +62,7 @@ optimisticList<T> :: optimisticList()
 template <class T>
 optimisticList<T> :: ~optimisticList()
 {
-    Node *temp;
-
-    while(head->next != tail) {
-        temp = head->next;
-        head->next = temp->next;
-        delete temp;
-    }
+    deleteList();
 
     delete head;
     delete tail;
@@ -273,4 +267,28 @@ bool optimisticList<T> :: validate(Node *pred, Node *curr)
         node = node->next;
     }
     return false;
+}
+
+/*************************************************************************
+ * Delete contents of linked list
+ * **********************************************************************/
+template <class T>
+void optimisticList<T> :: deleteList()
+{
+    Node *temp;
+
+    while(head->next != tail) {
+        temp = head->next;
+        head->next = temp->next;
+        delete temp;
+    }
+
+    head = new Node;
+    head->key = {};
+
+    tail = new Node;
+    tail->key = {};
+    tail->next = NULL;
+
+    head->next = tail;
 }

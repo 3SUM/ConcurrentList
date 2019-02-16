@@ -24,6 +24,7 @@ public:
     bool add(T);
     bool remove(T);
     void printList();
+    void deleteList();
 private:
     struct Node {
         T key;
@@ -57,13 +58,7 @@ fineList<T> :: fineList()
 template <class T>
 fineList<T> :: ~fineList()
 {
-    Node *temp;
-
-    while(head->next != tail) {
-        temp = head->next;
-        head->next = temp->next;
-        delete temp;
-    }
+    deleteList();
 
     delete head;
     delete tail;
@@ -234,4 +229,28 @@ void fineList<T> :: printList()
 
     // Release head lock
     head->lock.unlock();
+}
+
+/*************************************************************************
+ * Delete contents of linked list
+ * **********************************************************************/
+template <class T>
+void fineList<T> :: deleteList()
+{
+    Node *temp;
+
+    while(head->next != tail) {
+        temp = head->next;
+        head->next = temp->next;
+        delete temp;
+    }
+
+    head = new Node;
+    head->key = {};
+
+    tail = new Node;
+    tail->key = {};
+    tail->next = NULL;
+
+    head->next = tail;
 }

@@ -23,6 +23,7 @@ public:
     bool add(T);
     bool remove(T);
     void printList();
+    void deleteList();
 private:
     struct Node {
         T key;
@@ -50,13 +51,7 @@ coarseList<T> :: coarseList()
 template <class T>
 coarseList<T> :: ~coarseList()
 {
-    Node *temp;
-
-    while(head->next != NULL) {
-        temp = head->next;
-        head->next = temp->next;
-        delete temp;
-    }
+    deleteList();
 
     delete head;
 }
@@ -192,4 +187,23 @@ void coarseList<T> :: printList()
         cout << curr->key << " ";
         curr = curr->next;
     }
+}
+
+/*************************************************************************
+ * Delete contents of linked list
+ * **********************************************************************/
+template <class T>
+void coarseList<T> :: deleteList()
+{
+    Node *temp;
+
+    while(head->next != NULL) {
+        temp = head->next;
+        head->next = temp->next;
+        delete temp;
+    }
+
+    head = new Node;
+    head->key = {};
+    head->next = NULL;
 }
