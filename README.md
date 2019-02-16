@@ -10,14 +10,14 @@ Concurrent Linked List Implementations in C++
 - [Fine-Grained Synchronization](src/fineList.h)
 - [Optimistic Synchronization](src/optimisticList.h)
 - [Lazy Synchronization](src/lazyList.h)
-- Lock-Free (TODO)
+- [Lock-Free](src/lockFreeList.h)
 
 ## How to Test
 
-#### Testing of all synchronization methods is provided by [linktest](src/linktest.cpp).
+#### Testing of all synchronization methods is provided by [heavytest](src/heavytest.cpp).
 ```
 make
-./linktest <threadCount>
+./heavytest
 ```
 
 ## Contact
