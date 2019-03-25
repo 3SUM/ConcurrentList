@@ -1,10 +1,13 @@
-/*************************************************************************
- * Luis Maya
- * Lock Free Linked List
- * **********************************************************************/
+/*
+ * @author	Luis Maya Aranda
+ * @date	02/20/19
+ * @Lock Free Linked List
+ */
+ 
 #include "atomicMarkableReference.h"
 #include <iostream>
 #include <cstdlib>
+#include <climits>
 
 using namespace std;
 
@@ -79,10 +82,10 @@ private:
     Node *tail;
 };
 
-/*************************************************************************
+/*
  * Initialize class variables
  * Head and tail will be used as a sentinel nodes
- * **********************************************************************/
+ */
 template <class T>
 lockFreeList<T> :: lockFreeList()
 {
@@ -95,9 +98,9 @@ lockFreeList<T> :: lockFreeList()
     head->next->set(tail, false);
 }
 
-/*************************************************************************
+/*
  * Deallocate linked list memory
- * **********************************************************************/
+ */
 template <class T>
 lockFreeList<T> :: ~lockFreeList()
 {
@@ -107,12 +110,12 @@ lockFreeList<T> :: ~lockFreeList()
     delete tail;
 }
 
-/*************************************************************************
+/*
  * This wait-free contains method is almost the same as the Lazy
  * Synchronization method. It checks if the given parameter is in the linked
  * list. If found, return true, else return false. The only small differance
  * is it calls curr->next->get(marked) to test whether curr is marked.
- * **********************************************************************/
+ */
 template <class T>
 bool lockFreeList<T> :: contains(T key)
 {
@@ -127,10 +130,10 @@ bool lockFreeList<T> :: contains(T key)
     return (curr->key == key && !marked[0]);
 }
 
-/*************************************************************************
+/*
  * The add method creates a window to locate pred and curr. It adds a new
  * node only if pred is unmarked and refers to curr.
- * **********************************************************************/
+ */
 template <class T>
 bool lockFreeList<T> :: add(T key)
 {
@@ -151,10 +154,10 @@ bool lockFreeList<T> :: add(T key)
     }
 }
 
-/*************************************************************************
+/*
  * The remove method creates a window to locate pred and curr, and atomically
  * marks the node for removal.
- * **********************************************************************/
+ */
 template <class T>
 bool lockFreeList<T> :: remove(T key)
 {
@@ -179,9 +182,9 @@ bool lockFreeList<T> :: remove(T key)
     }
 }
 
-/*************************************************************************
+/*
  * Display contents of linked list
- * **********************************************************************/
+ */
  template <class T>
  void lockFreeList<T> :: printList()
  {
@@ -195,9 +198,9 @@ bool lockFreeList<T> :: remove(T key)
      }
  }
 
-/*************************************************************************
+/*
  * Delete contents of linked list
- * **********************************************************************/
+ */
 template <class T>
 void lockFreeList<T> :: deleteList()
 {

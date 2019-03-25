@@ -1,3 +1,10 @@
+/*
+ * @author	Luis Maya Aranda
+ * @date	02/16/19
+ * @AtomicMarkableReference implementation in C++
+ */
+
+
 #include <iostream>
 #include <atomic>
 
@@ -105,7 +112,7 @@ class atomicMarkableReference
 
 		/*
 		 * CAS with reference and the marked field. load() is atomic and hence that will be the linearization point.
-		 * We take advantage of the fact that C++ has short-circuiting hence
+		 * I take advantage of the fact that C++ has short-circuiting hence
 		 * if one of the first 2 conditions is false the atomic_compare_exchange_strong will not happen
 		 */
 
