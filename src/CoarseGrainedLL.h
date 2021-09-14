@@ -6,17 +6,15 @@
  * All methods act on the list only while holding the lock, so the execution
  * is essentially sequential.
  * **********************************************************************/
+#include <cstdlib>
 #include <iostream>
 #include <mutex>
-#include <cstdlib>
 
 using namespace std;
 
-
 template <class T>
-class CoarseGrainedLL
-{
-public:
+class CoarseGrainedLL {
+   public:
     CoarseGrainedLL();
     ~CoarseGrainedLL();
     bool contains(T);
@@ -24,7 +22,8 @@ public:
     bool remove(T);
     void printList();
     void deleteList();
-private:
+
+   private:
     struct Node {
         T key;
         Node *next;
@@ -38,8 +37,7 @@ private:
  * Head will be used as a sentinel node
  * **********************************************************************/
 template <class T>
-CoarseGrainedLL<T> :: CoarseGrainedLL()
-{
+CoarseGrainedLL<T>::CoarseGrainedLL() {
     head = new Node;
     head->key = {};
     head->next = NULL;
@@ -49,8 +47,7 @@ CoarseGrainedLL<T> :: CoarseGrainedLL()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-CoarseGrainedLL<T> :: ~CoarseGrainedLL()
-{
+CoarseGrainedLL<T>::~CoarseGrainedLL() {
     deleteList();
 
     delete head;
@@ -61,18 +58,17 @@ CoarseGrainedLL<T> :: ~CoarseGrainedLL()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool CoarseGrainedLL<T> :: contains(T key)
-{
+bool CoarseGrainedLL<T>::contains(T key) {
     // Acquire lock
-    lock_guard<mutex>guard(lock);
+    lock_guard<mutex> guard(lock);
 
     //Node *pred = head;
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != NULL) {
+    while (curr != NULL) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Set pred to curr node
@@ -83,7 +79,7 @@ bool CoarseGrainedLL<T> :: contains(T key)
     }
 
     // If key was not found, return false
-    if(curr != NULL && curr->key != key)
+    if (curr != NULL && curr->key != key)
         return false;
 
     // If key was found, return true
@@ -97,18 +93,17 @@ bool CoarseGrainedLL<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool CoarseGrainedLL<T> :: add(T key)
-{
+bool CoarseGrainedLL<T>::add(T key) {
     // Acquire lock
-    lock_guard<mutex>guard(lock);
+    lock_guard<mutex> guard(lock);
 
     Node *pred = head;
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != NULL) {
+    while (curr != NULL) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Set pred to curr node
@@ -119,7 +114,7 @@ bool CoarseGrainedLL<T> :: add(T key)
     }
 
     // If key is already in the list, don't add and return false
-    if(curr != NULL && curr->key == key)
+    if (curr != NULL && curr->key == key)
         return false;
 
     // Add key to list and return true
@@ -137,18 +132,17 @@ bool CoarseGrainedLL<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool CoarseGrainedLL<T> :: remove(T key)
-{
+bool CoarseGrainedLL<T>::remove(T key) {
     // Acquire lock
-    lock_guard<mutex>guard(lock);
+    lock_guard<mutex> guard(lock);
 
     Node *pred = head;
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != NULL) {
+    while (curr != NULL) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Set pred to curr node
@@ -159,7 +153,7 @@ bool CoarseGrainedLL<T> :: remove(T key)
     }
 
     // If key was not found, return false
-    if(curr != NULL && curr->key != key)
+    if (curr != NULL && curr->key != key)
         return false;
 
     // Remove key and return true
@@ -174,16 +168,15 @@ bool CoarseGrainedLL<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
 template <class T>
-void CoarseGrainedLL<T> :: printList()
-{
+void CoarseGrainedLL<T>::printList() {
     // Acquire lock
-    lock_guard<mutex>guard(lock);
+    lock_guard<mutex> guard(lock);
 
     // Set curr to head->next since head is a sentinel node
     Node *curr = head->next;
 
     // Traverse linked list and display contents
-    while(curr != NULL) {
+    while (curr != NULL) {
         cout << curr->key << " ";
         curr = curr->next;
     }
@@ -193,11 +186,10 @@ void CoarseGrainedLL<T> :: printList()
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void CoarseGrainedLL<T> :: deleteList()
-{
+void CoarseGrainedLL<T>::deleteList() {
     Node *temp;
 
-    while(head->next != NULL) {
+    while (head->next != NULL) {
         temp = head->next;
         head->next = temp->next;
         delete temp;

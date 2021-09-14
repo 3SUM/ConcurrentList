@@ -1,31 +1,32 @@
-#include "coarseList.h"
-#include "fineList.h"
-#include "optimisticList.h"
-#include "lazyList.h"
-#include "lockFreeList.h"
+#include <atomic>
 #include <iostream>
 #include <thread>
-#include <atomic>
+
+#include "CoarseGrainedLL.h"
+#include "FineGrainedLL.h"
+#include "LazyLL.h"
+#include "LockFreeLL.h"
+#include "OptimisticLL.h"
 
 using namespace std;
 
 atomic<int> items;
-int STEP  = 10;
+int STEP = 10;
 int LIMIT = 100;
 int THREAD_COUNT = 9;
 int THREAD_MULT = 1;
 
-coarseList<int> cList;
-fineList<int> fList;
-optimisticList<int> oList;
-lazyList<int> lList;
-lockFreeList<int> xList;
+CoarseGrainedLL<int> cList;
+FineGrainedLL<int> fList;
+OptimisticLL<int> oList;
+LazyLL<int> lList;
+LockFreeLL<int> xList;
 
 // ****************************************************************************
 
 void cinit(int start) {
-    while(start <= LIMIT) {
-        if(!cList.add(start)) {
+    while (start <= LIMIT) {
+        if (!cList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         items++;
@@ -34,8 +35,8 @@ void cinit(int start) {
 }
 
 void cdeleteFunction(int start) {
-    while(start <= LIMIT) {
-        if(!cList.remove(start)){
+    while (start <= LIMIT) {
+        if (!cList.remove(start)) {
             cout << "remove(" << start << ") error." << endl;
         }
         start += STEP;
@@ -43,8 +44,8 @@ void cdeleteFunction(int start) {
 }
 
 void csearchFunction(int start) {
-    while(start <= LIMIT) {
-        if(!cList.contains(start)) {
+    while (start <= LIMIT) {
+        if (!cList.contains(start)) {
             cout << "contains(" << start << ") error." << endl;
         }
         start += STEP;
@@ -52,8 +53,8 @@ void csearchFunction(int start) {
 }
 
 void cinsertFunction(int start) {
-    while(start <= LIMIT) {
-        if(!cList.add(start)) {
+    while (start <= LIMIT) {
+        if (!cList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         start += STEP;
@@ -63,8 +64,8 @@ void cinsertFunction(int start) {
 // ****************************************************************************
 
 void finit(int start) {
-    while(start <= LIMIT) {
-        if(!fList.add(start)) {
+    while (start <= LIMIT) {
+        if (!fList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         items++;
@@ -73,8 +74,8 @@ void finit(int start) {
 }
 
 void fdeleteFunction(int start) {
-    while(start <= LIMIT) {
-        if(!fList.remove(start)){
+    while (start <= LIMIT) {
+        if (!fList.remove(start)) {
             cout << "remove(" << start << ") error." << endl;
         }
         start += STEP;
@@ -82,8 +83,8 @@ void fdeleteFunction(int start) {
 }
 
 void fsearchFunction(int start) {
-    while(start <= LIMIT) {
-        if(!fList.contains(start)) {
+    while (start <= LIMIT) {
+        if (!fList.contains(start)) {
             cout << "contains(" << start << ") error." << endl;
         }
         start += STEP;
@@ -91,8 +92,8 @@ void fsearchFunction(int start) {
 }
 
 void finsertFunction(int start) {
-    while(start <= LIMIT) {
-        if(!fList.add(start)) {
+    while (start <= LIMIT) {
+        if (!fList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         start += STEP;
@@ -102,8 +103,8 @@ void finsertFunction(int start) {
 // ****************************************************************************
 
 void oinit(int start) {
-    while(start <= LIMIT) {
-        if(!oList.add(start)) {
+    while (start <= LIMIT) {
+        if (!oList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         items++;
@@ -112,8 +113,8 @@ void oinit(int start) {
 }
 
 void odeleteFunction(int start) {
-    while(start <= LIMIT) {
-        if(!oList.remove(start)){
+    while (start <= LIMIT) {
+        if (!oList.remove(start)) {
             cout << "remove(" << start << ") error." << endl;
         }
         start += STEP;
@@ -121,8 +122,8 @@ void odeleteFunction(int start) {
 }
 
 void osearchFunction(int start) {
-    while(start <= LIMIT) {
-        if(!oList.contains(start)) {
+    while (start <= LIMIT) {
+        if (!oList.contains(start)) {
             cout << "contains(" << start << ") error." << endl;
         }
         start += STEP;
@@ -130,8 +131,8 @@ void osearchFunction(int start) {
 }
 
 void oinsertFunction(int start) {
-    while(start <= LIMIT) {
-        if(!oList.add(start)) {
+    while (start <= LIMIT) {
+        if (!oList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         start += STEP;
@@ -141,8 +142,8 @@ void oinsertFunction(int start) {
 // ****************************************************************************
 
 void linit(int start) {
-    while(start <= LIMIT) {
-        if(!lList.add(start)) {
+    while (start <= LIMIT) {
+        if (!lList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         items++;
@@ -151,8 +152,8 @@ void linit(int start) {
 }
 
 void ldeleteFunction(int start) {
-    while(start <= LIMIT) {
-        if(!lList.remove(start)){
+    while (start <= LIMIT) {
+        if (!lList.remove(start)) {
             cout << "remove(" << start << ") error." << endl;
         }
         start += STEP;
@@ -160,8 +161,8 @@ void ldeleteFunction(int start) {
 }
 
 void lsearchFunction(int start) {
-    while(start <= LIMIT) {
-        if(!lList.contains(start)) {
+    while (start <= LIMIT) {
+        if (!lList.contains(start)) {
             cout << "contains(" << start << ") error." << endl;
         }
         start += STEP;
@@ -169,8 +170,8 @@ void lsearchFunction(int start) {
 }
 
 void linsertFunction(int start) {
-    while(start <= LIMIT) {
-        if(!lList.add(start)) {
+    while (start <= LIMIT) {
+        if (!lList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         start += STEP;
@@ -180,8 +181,8 @@ void linsertFunction(int start) {
 // ****************************************************************************
 
 void xinit(int start) {
-    while(start <= LIMIT) {
-        if(!xList.add(start)) {
+    while (start <= LIMIT) {
+        if (!xList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         items++;
@@ -190,8 +191,8 @@ void xinit(int start) {
 }
 
 void xdeleteFunction(int start) {
-    while(start <= LIMIT) {
-        if(!xList.remove(start)){
+    while (start <= LIMIT) {
+        if (!xList.remove(start)) {
             cout << "remove(" << start << ") error." << endl;
         }
         start += STEP;
@@ -199,8 +200,8 @@ void xdeleteFunction(int start) {
 }
 
 void xsearchFunction(int start) {
-    while(start <= LIMIT) {
-        if(!xList.contains(start)) {
+    while (start <= LIMIT) {
+        if (!xList.contains(start)) {
             cout << "contains(" << start << ") error." << endl;
         }
         start += STEP;
@@ -208,8 +209,8 @@ void xsearchFunction(int start) {
 }
 
 void xinsertFunction(int start) {
-    while(start <= LIMIT) {
-        if(!xList.add(start)) {
+    while (start <= LIMIT) {
+        if (!xList.add(start)) {
             cout << "add(" << start << ") error." << endl;
         }
         start += STEP;
@@ -217,26 +218,25 @@ void xinsertFunction(int start) {
 }
 
 // ****************************************************************************
-int main(int argc, char *argv[])
-{
-// *****************************************************************
-//  Data declarations...
+int main(int argc, char *argv[]) {
+    // *****************************************************************
+    //  Data declarations...
 
-    const char	*bold = "\033[1m";
-    const char	*unbold = "\033[0m";
-    string		stars = "";
-    string      bars = "";
-    char        userOpt;
-    bool        keepProcessing = true;
+    const char *bold = "\033[1m";
+    const char *unbold = "\033[0m";
+    string stars = "";
+    string bars = "";
+    char userOpt;
+    bool keepProcessing = true;
 
     stars.append(65, '*');
     bars.append(60, '-');
 
-// *****************************************************************
-//  Get/verify command line arguments.
-//	Error out if bad arguments...
+    // *****************************************************************
+    //  Get/verify command line arguments.
+    //	Error out if bad arguments...
 
-    if(argc != 1) {
+    if (argc != 1) {
         cout << "Usage: ./heavytest" << endl;
         exit(1);
     }
@@ -249,16 +249,17 @@ int main(int argc, char *argv[])
     thread *t0 = NULL;
     thread *t1 = NULL;
 
-// *****************************************************************
-// Display header
+    // *****************************************************************
+    // Display header
 
-	cout << stars << endl << bold << "Concurrent Linked List Tests" <<
-	unbold << endl << endl;
+    cout << stars << endl
+         << bold << "Concurrent Linked List Tests" << unbold << endl
+         << endl;
 
-// *****************************************************************
-// Main...
+    // *****************************************************************
+    // Main...
 
-    while(keepProcessing) {
+    while (keepProcessing) {
         cout << bars << endl;
         cout << "Select Option:" << endl;
         cout << "\t'c' - Coarse Grained Synchronization" << endl;
@@ -274,25 +275,26 @@ int main(int argc, char *argv[])
         cout << "> ";
         cin >> userOpt;
 
-        switch(userOpt) {
-// *****************************************************************
-// Coarse Grained Linked List
+        switch (userOpt) {
+                // *****************************************************************
+                // Coarse Grained Linked List
             case 'c':
-                cout << bars << endl << bold << "Coarse Grained Linked List"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Coarse Grained Linked List"
+                     << unbold << unbold << endl;
 
                 // Allocate threads to run
-                t0 = new thread[6*THREAD_MULT];
+                t0 = new thread[6 * THREAD_MULT];
                 t1 = new thread[THREAD_COUNT];
 
                 items = 0;
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+j*6] = thread(&cinit, i+STEP+j*9);
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + j * 6] = thread(&cinit, i + STEP + j * 9);
                 }
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+6*j].join();
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + 6 * j].join();
                 }
                 cout << "Item count: " << items << endl;
 
@@ -300,50 +302,52 @@ int main(int argc, char *argv[])
                 s1 = chrono::high_resolution_clock::now();
 
                 // Start up threads...
-                for(int i = 0; i < THREAD_COUNT; i++) {
-                    if((i/3)%3 == 0)
-                        t1[i] = thread(&cdeleteFunction, i+STEP);
-                    else if((i/3)%3 == 1)
-                        t1[i] = thread(&csearchFunction, i+STEP);
-                    else if((i/3)%3 == 2)
-                        t1[i] = thread(&cinsertFunction, i+STEP);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    if ((i / 3) % 3 == 0)
+                        t1[i] = thread(&cdeleteFunction, i + STEP);
+                    else if ((i / 3) % 3 == 1)
+                        t1[i] = thread(&csearchFunction, i + STEP);
+                    else if ((i / 3) % 3 == 2)
+                        t1[i] = thread(&cinsertFunction, i + STEP);
                 }
 
                 // Wait for threads to finish...
-                for(int i = 0; i < THREAD_COUNT; i++)
+                for (int i = 0; i < THREAD_COUNT; i++)
                     t1[i].join();
 
                 // End time
                 s2 = chrono::high_resolution_clock::now();
 
                 cout << "   Run-time: " << chrono::duration_cast<chrono::milliseconds>(s2 - s1).count()
-                     << " milliseconds" << endl << endl;
+                     << " milliseconds" << endl
+                     << endl;
 
                 cList.deleteList();
 
-                delete [] t0;
-                delete [] t1;
+                delete[] t0;
+                delete[] t1;
 
                 break;
 
-// *****************************************************************
-// Fine Grained Linked List
+                // *****************************************************************
+                // Fine Grained Linked List
             case 'f':
-                cout << bars << endl << bold << "Fine Grained Linked List"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Fine Grained Linked List"
+                     << unbold << unbold << endl;
 
                 // Allocate threads to run
-                t0 = new thread[6*THREAD_MULT];
+                t0 = new thread[6 * THREAD_MULT];
                 t1 = new thread[THREAD_COUNT];
 
                 items = 0;
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+j*6] = thread(&finit, i+STEP+j*9);
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + j * 6] = thread(&finit, i + STEP + j * 9);
                 }
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+6*j].join();
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + 6 * j].join();
                 }
 
                 cout << "Item count: " << items << endl;
@@ -352,50 +356,52 @@ int main(int argc, char *argv[])
                 s1 = chrono::high_resolution_clock::now();
 
                 // Start up threads...
-                for(int i = 0; i < THREAD_COUNT; i++) {
-                    if((i/3)%3 == 0)
-                        t1[i] = thread(&fdeleteFunction, i+STEP);
-                    else if((i/3)%3 == 1)
-                        t1[i] = thread(&fsearchFunction, i+STEP);
-                    else if((i/3)%3 == 2)
-                        t1[i] = thread(&finsertFunction, i+STEP);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    if ((i / 3) % 3 == 0)
+                        t1[i] = thread(&fdeleteFunction, i + STEP);
+                    else if ((i / 3) % 3 == 1)
+                        t1[i] = thread(&fsearchFunction, i + STEP);
+                    else if ((i / 3) % 3 == 2)
+                        t1[i] = thread(&finsertFunction, i + STEP);
                 }
 
                 // Wait for threads to finish...
-                for(int i = 0; i < THREAD_COUNT; i++)
+                for (int i = 0; i < THREAD_COUNT; i++)
                     t1[i].join();
 
                 // End time
                 s2 = chrono::high_resolution_clock::now();
 
                 cout << "   Run-time: " << chrono::duration_cast<chrono::milliseconds>(s2 - s1).count()
-                     << " milliseconds" << endl << endl;
+                     << " milliseconds" << endl
+                     << endl;
 
                 fList.deleteList();
 
-                delete [] t0;
-                delete [] t1;
+                delete[] t0;
+                delete[] t1;
 
                 break;
 
-// *****************************************************************
-// Optimistic Synchronization Linked List
+                // *****************************************************************
+                // Optimistic Synchronization Linked List
             case 'o':
-                cout << bars << endl << bold << "Optimistic Synchronization Linked List"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Optimistic Synchronization Linked List"
+                     << unbold << unbold << endl;
 
                 // Allocate threads to run
-                t0 = new thread[6*THREAD_MULT];
+                t0 = new thread[6 * THREAD_MULT];
                 t1 = new thread[THREAD_COUNT];
 
                 items = 0;
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+j*6] = thread(&oinit, i+STEP+j*9);
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + j * 6] = thread(&oinit, i + STEP + j * 9);
                 }
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+6*j].join();
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + 6 * j].join();
                 }
 
                 cout << "Item count: " << items << endl;
@@ -404,50 +410,52 @@ int main(int argc, char *argv[])
                 s1 = chrono::high_resolution_clock::now();
 
                 // Start up threads...
-                for(int i = 0; i < THREAD_COUNT; i++) {
-                    if((i/3)%3 == 0)
-                        t1[i] = thread(&odeleteFunction, i+STEP);
-                    else if((i/3)%3 == 1)
-                        t1[i] = thread(&osearchFunction, i+STEP);
-                    else if((i/3)%3 == 2)
-                        t1[i] = thread(&oinsertFunction, i+STEP);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    if ((i / 3) % 3 == 0)
+                        t1[i] = thread(&odeleteFunction, i + STEP);
+                    else if ((i / 3) % 3 == 1)
+                        t1[i] = thread(&osearchFunction, i + STEP);
+                    else if ((i / 3) % 3 == 2)
+                        t1[i] = thread(&oinsertFunction, i + STEP);
                 }
 
                 // Wait for threads to finish...
-                for(int i = 0; i < THREAD_COUNT; i++)
+                for (int i = 0; i < THREAD_COUNT; i++)
                     t1[i].join();
 
                 // End time
                 s2 = chrono::high_resolution_clock::now();
 
                 cout << "   Run-time: " << chrono::duration_cast<chrono::milliseconds>(s2 - s1).count()
-                     << " milliseconds" << endl << endl;
+                     << " milliseconds" << endl
+                     << endl;
 
                 oList.deleteList();
 
-                delete [] t0;
-                delete [] t1;
+                delete[] t0;
+                delete[] t1;
 
                 break;
 
-// *****************************************************************
-// Lazy Synchronization Linked List
+                // *****************************************************************
+                // Lazy Synchronization Linked List
             case 'l':
-                cout << bars << endl << bold << "Lazy Synchronization Linked List"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Lazy Synchronization Linked List"
+                     << unbold << unbold << endl;
 
                 // Allocate threads to run
-                t0 = new thread[6*THREAD_MULT];
+                t0 = new thread[6 * THREAD_MULT];
                 t1 = new thread[THREAD_COUNT];
 
                 items = 0;
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+j*6] = thread(&linit, i+STEP+j*9);
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + j * 6] = thread(&linit, i + STEP + j * 9);
                 }
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+6*j].join();
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + 6 * j].join();
                 }
 
                 cout << "Item count: " << items << endl;
@@ -456,50 +464,52 @@ int main(int argc, char *argv[])
                 s1 = chrono::high_resolution_clock::now();
 
                 // Start up threads...
-                for(int i = 0; i < THREAD_COUNT; i++) {
-                    if((i/3)%3 == 0)
-                        t1[i] = thread(&ldeleteFunction, i+STEP);
-                    else if((i/3)%3 == 1)
-                        t1[i] = thread(&lsearchFunction, i+STEP);
-                    else if((i/3)%3 == 2)
-                        t1[i] = thread(&linsertFunction, i+STEP);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    if ((i / 3) % 3 == 0)
+                        t1[i] = thread(&ldeleteFunction, i + STEP);
+                    else if ((i / 3) % 3 == 1)
+                        t1[i] = thread(&lsearchFunction, i + STEP);
+                    else if ((i / 3) % 3 == 2)
+                        t1[i] = thread(&linsertFunction, i + STEP);
                 }
 
                 // Wait for threads to finish...
-                for(int i = 0; i < THREAD_COUNT; i++)
+                for (int i = 0; i < THREAD_COUNT; i++)
                     t1[i].join();
 
                 // End time
                 s2 = chrono::high_resolution_clock::now();
 
                 cout << "   Run-time: " << chrono::duration_cast<chrono::milliseconds>(s2 - s1).count()
-                     << " milliseconds" << endl << endl;
+                     << " milliseconds" << endl
+                     << endl;
 
                 lList.deleteList();
 
-                delete [] t0;
-                delete [] t1;
+                delete[] t0;
+                delete[] t1;
 
                 break;
 
-// *****************************************************************
-// Lock Free Linked List
+                // *****************************************************************
+                // Lock Free Linked List
             case 'x':
-                cout << bars << endl << bold << "Lock Free Linked List"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Lock Free Linked List"
+                     << unbold << unbold << endl;
 
                 // Allocate threads to run
-                t0 = new thread[6*THREAD_MULT];
+                t0 = new thread[6 * THREAD_MULT];
                 t1 = new thread[THREAD_COUNT];
 
                 items = 0;
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+j*6] = thread(&xinit, i+STEP+j*9);
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + j * 6] = thread(&xinit, i + STEP + j * 9);
                 }
-                for(int j = 0; j < THREAD_MULT; j++){
-                    for(int i = 0; i < 6; i++)
-                        t0[i+6*j].join();
+                for (int j = 0; j < THREAD_MULT; j++) {
+                    for (int i = 0; i < 6; i++)
+                        t0[i + 6 * j].join();
                 }
 
                 cout << "Item count: " << items << endl;
@@ -508,45 +518,48 @@ int main(int argc, char *argv[])
                 s1 = chrono::high_resolution_clock::now();
 
                 // Start up threads...
-                for(int i = 0; i < THREAD_COUNT; i++) {
-                    if((i/3)%3 == 0)
-                        t1[i] = thread(&xdeleteFunction, i+STEP);
-                    else if((i/3)%3 == 1)
-                        t1[i] = thread(&xsearchFunction, i+STEP);
-                    else if((i/3)%3 == 2)
-                        t1[i] = thread(&xinsertFunction, i+STEP);
+                for (int i = 0; i < THREAD_COUNT; i++) {
+                    if ((i / 3) % 3 == 0)
+                        t1[i] = thread(&xdeleteFunction, i + STEP);
+                    else if ((i / 3) % 3 == 1)
+                        t1[i] = thread(&xsearchFunction, i + STEP);
+                    else if ((i / 3) % 3 == 2)
+                        t1[i] = thread(&xinsertFunction, i + STEP);
                 }
 
                 // Wait for threads to finish...
-                for(int i = 0; i < THREAD_COUNT; i++)
+                for (int i = 0; i < THREAD_COUNT; i++)
                     t1[i].join();
 
                 // End time
                 s2 = chrono::high_resolution_clock::now();
 
                 cout << "   Run-time: " << chrono::duration_cast<chrono::milliseconds>(s2 - s1).count()
-                     << " milliseconds" << endl << endl;
+                     << " milliseconds" << endl
+                     << endl;
 
                 xList.deleteList();
 
-                delete [] t0;
-                delete [] t1;
+                delete[] t0;
+                delete[] t1;
 
                 break;
 
-// *****************************************************************
-// quit, clear and default cases
+                // *****************************************************************
+                // quit, clear and default cases
             case 'd':
-                cout << bars << endl << bold << "Machine Statistics"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Machine Statistics"
+                     << unbold << unbold << endl;
 
                 cout << "\tHardware Cores: " << hwthd << endl;
                 cout << "\tThread Count: " << THREAD_COUNT << endl;
                 cout << "\tLimit: " << LIMIT << endl;
                 break;
             case 'n':
-                cout << bars << endl << bold << "Change limit"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Change limit"
+                     << unbold << unbold << endl;
 
                 cout << "\tCurrent limit: " << LIMIT << endl
                      << "\tEnter new limit > ";
@@ -554,13 +567,14 @@ int main(int argc, char *argv[])
                 cout << "\tNew limit: " << LIMIT << endl;
                 break;
             case 't':
-                cout << bars << endl << bold << "Change thread count"
-                << unbold << unbold << endl;
+                cout << bars << endl
+                     << bold << "Change thread count"
+                     << unbold << unbold << endl;
 
                 cout << "\tCurrent thread count: " << THREAD_COUNT << endl
                      << "\tEnter thread count > ";
                 cin >> THREAD_MULT;
-                THREAD_COUNT = 9*THREAD_MULT;
+                THREAD_COUNT = 9 * THREAD_MULT;
                 STEP = THREAD_COUNT + 1;
                 cout << "\tNew thread count (x9): " << THREAD_COUNT << endl;
                 break;
@@ -578,8 +592,8 @@ int main(int argc, char *argv[])
         }
     }
 
-// *****************************************************************
-// All done...
+    // *****************************************************************
+    // All done...
 
     return 0;
 }

@@ -8,16 +8,15 @@
  * fine-grained locking permits concurrent threads to traverse the list
  * together in a pipelined fashion.
  * **********************************************************************/
+#include <cstdlib>
 #include <iostream>
 #include <mutex>
-#include <cstdlib>
 
 using namespace std;
 
 template <class T>
-class FineGrainedLL
-{
-public:
+class FineGrainedLL {
+   public:
     FineGrainedLL();
     ~FineGrainedLL();
     bool contains(T);
@@ -25,7 +24,8 @@ public:
     bool remove(T);
     void printList();
     void deleteList();
-private:
+
+   private:
     struct Node {
         T key;
         Node *next;
@@ -40,8 +40,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-FineGrainedLL<T> :: FineGrainedLL()
-{
+FineGrainedLL<T>::FineGrainedLL() {
     head = new Node;
     head->key = {};
 
@@ -56,8 +55,7 @@ FineGrainedLL<T> :: FineGrainedLL()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-FineGrainedLL<T> :: ~FineGrainedLL()
-{
+FineGrainedLL<T>::~FineGrainedLL() {
     deleteList();
 
     delete head;
@@ -69,8 +67,7 @@ FineGrainedLL<T> :: ~FineGrainedLL()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool FineGrainedLL<T> :: contains(T key)
-{
+bool FineGrainedLL<T>::contains(T key) {
     // Acquire init(head) pred node lock
     head->lock.lock();
     Node *pred = head;
@@ -80,9 +77,9 @@ bool FineGrainedLL<T> :: contains(T key)
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != tail) {
+    while (curr != tail) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Release pred lock and update pred to curr
@@ -95,7 +92,7 @@ bool FineGrainedLL<T> :: contains(T key)
     }
 
     // If key was not found, release pred and curr locks, and return false
-    if(curr != tail && curr->key != key) {
+    if (curr != tail && curr->key != key) {
         pred->lock.unlock();
         curr->lock.unlock();
         return false;
@@ -115,8 +112,7 @@ bool FineGrainedLL<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool FineGrainedLL<T> :: add(T key)
-{
+bool FineGrainedLL<T>::add(T key) {
     // Acquire init(head) pred node lock
     head->lock.lock();
     Node *pred = head;
@@ -126,9 +122,9 @@ bool FineGrainedLL<T> :: add(T key)
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != tail) {
+    while (curr != tail) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Release pred lock and update pred to curr
@@ -141,7 +137,7 @@ bool FineGrainedLL<T> :: add(T key)
     }
 
     // If key is already inserted, release pred and curr locks, and return false
-    if(curr != tail && curr->key == key) {
+    if (curr != tail && curr->key == key) {
         pred->lock.unlock();
         curr->lock.unlock();
         return false;
@@ -165,8 +161,7 @@ bool FineGrainedLL<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool FineGrainedLL<T> :: remove(T key)
-{
+bool FineGrainedLL<T>::remove(T key) {
     // Acquire init(head) pred node lock
     head->lock.lock();
     Node *pred = head;
@@ -176,9 +171,9 @@ bool FineGrainedLL<T> :: remove(T key)
     Node *curr = head->next;
 
     // While not at the of the linked list
-    while(curr != tail) {
+    while (curr != tail) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Release pred lock and update pred to curr
@@ -191,7 +186,7 @@ bool FineGrainedLL<T> :: remove(T key)
     }
 
     // If key was not found, release pred and curr locks, and return false
-    if(curr != tail && curr->key != key) {
+    if (curr != tail && curr->key != key) {
         pred->lock.unlock();
         curr->lock.unlock();
         return false;
@@ -213,8 +208,7 @@ bool FineGrainedLL<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
 template <class T>
-void FineGrainedLL<T> :: printList()
-{
+void FineGrainedLL<T>::printList() {
     // Acquire head lock
     head->lock.lock();
 
@@ -222,7 +216,7 @@ void FineGrainedLL<T> :: printList()
     Node *curr = head->next;
 
     // Traverse linked list and display contents
-    while(curr != tail) {
+    while (curr != tail) {
         cout << curr->key << " ";
         curr = curr->next;
     }
@@ -235,11 +229,10 @@ void FineGrainedLL<T> :: printList()
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void FineGrainedLL<T> :: deleteList()
-{
+void FineGrainedLL<T>::deleteList() {
     Node *temp;
 
-    while(head->next != tail) {
+    while (head->next != tail) {
         temp = head->next;
         head->next = temp->next;
         delete temp;
