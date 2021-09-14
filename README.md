@@ -6,11 +6,11 @@ Concurrent Linked List Implementations in C++
 
 #### Synchronization Methods
 
-- [Coarse-Grained Synchronization](src/coarseList.h)
-- [Fine-Grained Synchronization](src/fineList.h)
-- [Optimistic Synchronization](src/optimisticList.h)
-- [Lazy Synchronization](src/lazyList.h)
-- [Lock-Free](src/lockFreeList.h)
+- [Coarse-Grained Synchronization](/src/CoarseGrainedLL.h)
+- [Fine-Grained Synchronization](/src/FineGrainedLL.h)
+- [Optimistic Synchronization](/src/OptimisticLL.h)
+- [Lazy Synchronization](/src/LazyLL.h)
+- [Lock-Free](/src/LockFreeLL.h)
 
 ## How to Test
 
