@@ -3,18 +3,18 @@
  * @date	02/20/19
  * @Lock Free Linked List
  */
- 
-#include "atomicMarkableReference.h"
-#include <iostream>
-#include <cstdlib>
+
 #include <climits>
+#include <cstdlib>
+#include <iostream>
+
+#include "AtomicMarkableReference.h"
 
 using namespace std;
 
 template <class T>
-class LockFreeLL
-{
-public:
+class LockFreeLL {
+   public:
     LockFreeLL();
     ~LockFreeLL();
     bool contains(T);
@@ -22,17 +22,18 @@ public:
     bool remove(T);
     void printList();
     void deleteList();
-private:
+
+   private:
     struct Node {
         T key;
-        atomicMarkableReference<Node> *next;
+        AtomicMarkableReference<Node> *next;
         Node() {
             key = {};
-            next = new atomicMarkableReference<Node>;
+            next = new AtomicMarkableReference<Node>;
         }
         Node(T myKey) {
             key = myKey;
-            next = new atomicMarkableReference<Node>;
+            next = new AtomicMarkableReference<Node>;
         }
     };
 
@@ -56,19 +57,20 @@ private:
             bool *marked = new bool;
             bool snip;
 
-            RETRY: while(true) {
+        RETRY:
+            while (true) {
                 pred = head;
                 curr = pred->next->getReference();
-                while(true) {
+                while (true) {
                     succ = curr->next->get(marked);
-                    while(marked[0]) {
+                    while (marked[0]) {
                         snip = pred->next->CAS(curr, succ, false, false);
-                        if(!snip)
+                        if (!snip)
                             goto RETRY;
                         curr = succ;
                         succ = curr->next->get(marked);
                     }
-                    if(curr->key >= key) {
+                    if (curr->key >= key) {
                         Window(pred, curr);
                         return;
                     }
@@ -87,8 +89,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  */
 template <class T>
-LockFreeLL<T> :: LockFreeLL()
-{
+LockFreeLL<T>::LockFreeLL() {
     head = new Node(INT_MIN);
 
     tail = new Node(INT_MAX);
@@ -102,8 +103,7 @@ LockFreeLL<T> :: LockFreeLL()
  * Deallocate linked list memory
  */
 template <class T>
-LockFreeLL<T> :: ~LockFreeLL()
-{
+LockFreeLL<T>::~LockFreeLL() {
     deleteList();
 
     delete head;
@@ -117,12 +117,11 @@ LockFreeLL<T> :: ~LockFreeLL()
  * is it calls curr->next->get(marked) to test whether curr is marked.
  */
 template <class T>
-bool LockFreeLL<T> :: contains(T key)
-{
+bool LockFreeLL<T>::contains(T key) {
     bool *marked = new bool;
 
     Node *curr = head;
-    while(curr->key < key) {
+    while (curr->key < key) {
         curr = curr->next->getReference();
         curr->next->get(marked);
     }
@@ -135,19 +134,17 @@ bool LockFreeLL<T> :: contains(T key)
  * node only if pred is unmarked and refers to curr.
  */
 template <class T>
-bool LockFreeLL<T> :: add(T key)
-{
-    while(true) {
+bool LockFreeLL<T>::add(T key) {
+    while (true) {
         Window window(head, key);
         Node *pred = window.pred;
         Node *curr = window.curr;
-        if(curr->key == key) {
+        if (curr->key == key) {
             return false;
-        }
-        else {
+        } else {
             Node *node = new Node(key);
             node->next->set(curr, false);
-            if(pred->next->CAS(curr, node, false, false)) {
+            if (pred->next->CAS(curr, node, false, false)) {
                 return true;
             }
         }
@@ -159,22 +156,20 @@ bool LockFreeLL<T> :: add(T key)
  * marks the node for removal.
  */
 template <class T>
-bool LockFreeLL<T> :: remove(T key)
-{
+bool LockFreeLL<T>::remove(T key) {
     bool snip = false;
 
-    while(true) {
+    while (true) {
         Window window(head, key);
         Node *pred = window.pred;
         Node *curr = window.curr;
-        if(curr->key != key) {
+        if (curr->key != key) {
             return false;
-        }
-        else {
+        } else {
             Node *succ = curr->next->getReference();
 
             snip = curr->next->attemptMark(succ, true);
-            if(!snip)
+            if (!snip)
                 continue;
             pred->next->CAS(curr, succ, false, false);
             return true;
@@ -185,28 +180,26 @@ bool LockFreeLL<T> :: remove(T key)
 /*
  * Display contents of linked list
  */
- template <class T>
- void LockFreeLL<T> :: printList()
- {
-     // Set curr to head->next since head is a sentinel node
-     Node *curr = head;
+template <class T>
+void LockFreeLL<T>::printList() {
+    // Set curr to head->next since head is a sentinel node
+    Node *curr = head;
 
-     // Traverse linked list and display contents
-     while(curr != NULL) {
-         cout << curr->key << " ";
-         curr = curr->next->getReference();
-     }
- }
+    // Traverse linked list and display contents
+    while (curr != NULL) {
+        cout << curr->key << " ";
+        curr = curr->next->getReference();
+    }
+}
 
 /*
  * Delete contents of linked list
  */
 template <class T>
-void LockFreeLL<T> :: deleteList()
-{
+void LockFreeLL<T>::deleteList() {
     Node *temp;
 
-    while(head->next->getReference() != tail) {
+    while (head->next->getReference() != tail) {
         temp = head->next->getReference();
         head->next = temp->next;
         delete temp;

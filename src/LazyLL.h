@@ -12,17 +12,15 @@
  * thread does not find a node, or finds it marked, then the item is not
  * in the set.
  * **********************************************************************/
+#include <cstdlib>
 #include <iostream>
 #include <mutex>
-#include <cstdlib>
 
 using namespace std;
 
-
 template <class T>
-class LazyLL
-{
-public:
+class LazyLL {
+   public:
     LazyLL();
     ~LazyLL();
     bool contains(T);
@@ -30,7 +28,8 @@ public:
     bool remove(T);
     void printList();
     void deleteList();
-private:
+
+   private:
     struct Node {
         T key;
         bool marked;
@@ -47,8 +46,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-LazyLL<T> :: LazyLL()
-{
+LazyLL<T>::LazyLL() {
     head = new Node;
     head->key = {};
     head->marked = false;
@@ -65,8 +63,7 @@ LazyLL<T> :: LazyLL()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-LazyLL<T> :: ~LazyLL()
-{
+LazyLL<T>::~LazyLL() {
     deleteList();
 
     delete head;
@@ -78,15 +75,14 @@ LazyLL<T> :: ~LazyLL()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T> :: contains(T key)
-{
+bool LazyLL<T>::contains(T key) {
     // Set curr to head node
     Node *curr = head;
 
     // While not at the of the linked list
-    while(curr != tail) {
+    while (curr != tail) {
         // If current key is >= key, break out of traversal
-        if(curr->key >= key)
+        if (curr->key >= key)
             break;
 
         // Set curr to next node
@@ -104,16 +100,15 @@ bool LazyLL<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T> :: add(T key)
-{
-    while(true) {
+bool LazyLL<T>::add(T key) {
+    while (true) {
         Node *pred = head;
         Node *curr = head->next;
 
         // While not at the of the linked list
-        while(curr != tail) {
+        while (curr != tail) {
             // If current key is >= key, break out of traversal
-            if(curr->key >= key)
+            if (curr->key >= key)
                 break;
 
             // Set pred to curr node
@@ -128,9 +123,9 @@ bool LazyLL<T> :: add(T key)
         curr->lock.lock();
 
         // Validate we locked correct nodes
-        if(validate(pred,curr)) {
+        if (validate(pred, curr)) {
             // If valid & key is found in list, release locks and return false
-            if(curr != tail && curr->key == key) {
+            if (curr != tail && curr->key == key) {
                 pred->lock.unlock();
                 curr->lock.unlock();
                 return false;
@@ -161,16 +156,15 @@ bool LazyLL<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T> :: remove(T key)
-{
-    while(true) {
+bool LazyLL<T>::remove(T key) {
+    while (true) {
         Node *pred = head;
         Node *curr = head->next;
 
         // While not at the of the linked list
-        while(curr != tail) {
+        while (curr != tail) {
             // If current key is >= key, break out of traversal
-            if(curr->key >= key)
+            if (curr->key >= key)
                 break;
 
             // Set pred to curr node
@@ -185,9 +179,9 @@ bool LazyLL<T> :: remove(T key)
         curr->lock.lock();
 
         // Validate we locked correct nodes
-        if(validate(pred, curr)) {
+        if (validate(pred, curr)) {
             // If valid & key is not found in list, release locks and return false
-            if(curr != tail && curr->key != key) {
+            if (curr != tail && curr->key != key) {
                 pred->lock.unlock();
                 curr->lock.unlock();
                 return false;
@@ -218,44 +212,41 @@ bool LazyLL<T> :: remove(T key)
 /*************************************************************************
  * Display contents of linked list
  * **********************************************************************/
- template <class T>
- void LazyLL<T> :: printList()
- {
-     // Acquire head lock
-     head->lock.lock();
+template <class T>
+void LazyLL<T>::printList() {
+    // Acquire head lock
+    head->lock.lock();
 
-     // Set curr to head->next since head is a sentinel node
-     Node *curr = head->next;
+    // Set curr to head->next since head is a sentinel node
+    Node *curr = head->next;
 
-     // Traverse linked list and display contents
-     while(curr != tail) {
-         cout << curr->key << " ";
-         curr = curr->next;
-     }
+    // Traverse linked list and display contents
+    while (curr != tail) {
+        cout << curr->key << " ";
+        curr = curr->next;
+    }
 
-     // Release head lock
-     head->lock.unlock();
- }
+    // Release head lock
+    head->lock.unlock();
+}
 
 /*************************************************************************
  * Validation checks that neither the pred nor curr nodes have been logically
  * deleted, and that pred points to curr.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T> :: validate(Node *pred, Node *curr)
-{
-    return  (!pred->marked && !curr->marked && pred->next == curr);
+bool LazyLL<T>::validate(Node *pred, Node *curr) {
+    return (!pred->marked && !curr->marked && pred->next == curr);
 }
 
 /*************************************************************************
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void LazyLL<T> :: deleteList()
-{
+void LazyLL<T>::deleteList() {
     Node *temp;
 
-    while(head->next != tail) {
+    while (head->next != tail) {
         temp = head->next;
         head->next = temp->next;
         delete temp;

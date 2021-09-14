@@ -13,21 +13,21 @@ using namespace std;
  * Struct for atomic markable reference
  */
 template <class T>
-struct markableReference {
+struct MarkableReference {
     T* next;
     bool marked;
 
-    markableReference() {
+    MarkableReference() {
         next = NULL;
         marked = false;
     }
 
-    markableReference(T* node, bool mark) {
+    MarkableReference(T* node, bool mark) {
         next = node;
         marked = mark;
     }
 
-    bool operator==(const markableReference<T>& other) {
+    bool operator==(const MarkableReference<T>& other) {
         return (next == other.next && marked == other.marked);
     }
 };
@@ -36,22 +36,22 @@ struct markableReference {
  * The AtomicMarkableReference class
  */
 template <class T>
-class atomicMarkableReference {
+class AtomicMarkableReference {
    private:
     /*
 		 * Since a pointer is always a POD type, even if T is of non-pod type
 		 * atomicity will be maintained
 		 */
-    std::atomic<markableReference<T>*> markedNext;
+    std::atomic<MarkableReference<T>*> markedNext;
 
    public:
-    atomicMarkableReference() {
-        markedNext.store(new markableReference<T>(NULL, false));
+    AtomicMarkableReference() {
+        markedNext.store(new MarkableReference<T>(NULL, false));
     }
 
-    atomicMarkableReference(T* nextNode, bool mark) {
+    AtomicMarkableReference(T* nextNode, bool mark) {
         /* Atomically store the values*/
-        markedNext.store(new markableReference<T>(nextNode, mark));
+        markedNext.store(new MarkableReference<T>(nextNode, mark));
     }
 
     /*
@@ -66,7 +66,7 @@ class atomicMarkableReference {
 		 * load() is atomic and hence that will be the linearization point.
 		 */
     T* get(bool* mark) {
-        markableReference<T>* temp = markedNext.load();
+        MarkableReference<T>* temp = markedNext.load();
         *mark = temp->marked;
         return temp->next;
     }
@@ -75,10 +75,10 @@ class atomicMarkableReference {
 		 * Set the variables unconditionally. load() is atomic and hence that will be the linearization point
 		 */
     void set(T* newRef, bool newMark) {
-        markableReference<T>* curr = markedNext.load();
+        MarkableReference<T>* curr = markedNext.load();
 
         if (newRef != curr->next || newMark != curr->marked) {
-            markedNext.store(new markableReference<T>(newRef, newMark));
+            markedNext.store(new MarkableReference<T>(newRef, newMark));
         }
     }
 
@@ -87,10 +87,10 @@ class atomicMarkableReference {
 		 * replaces it with a new mark value
 		 */
     bool attemptMark(T* expected, bool newMark) {
-        markableReference<T>* curr = markedNext.load();
+        MarkableReference<T>* curr = markedNext.load();
 
         if (expected == curr->next) {
-            markedNext.store(new markableReference<T>(expected, newMark));
+            markedNext.store(new MarkableReference<T>(expected, newMark));
             return true;
         }
         return false;
@@ -103,9 +103,9 @@ class atomicMarkableReference {
 		 */
 
     bool CAS(T* expected, T* newValue, bool expectedBool, bool newBool) {
-        markableReference<T>* curr = markedNext.load();
+        MarkableReference<T>* curr = markedNext.load();
         return (expected == curr->next && expectedBool == curr->marked &&
                 ((newValue == curr->next && newBool == curr->marked) ||
-                 markedNext.compare_exchange_strong(curr, new markableReference<T>(newValue, newBool))));
+                 markedNext.compare_exchange_strong(curr, new MarkableReference<T>(newValue, newBool))));
     }
 };

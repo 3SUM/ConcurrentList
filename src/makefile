@@ -5,7 +5,7 @@
 
 OBJS 	= heavytest.o
 CC		= g++ -Wall -pedantic -g -std=c++11 -pthread
-DEPS	= coarseList.h fineList.h optimisticList.h lazyList.h lockFreeList.h
+DEPS	= CoarseGrainedLL.h FineGrainedLL.h OptimisticLL.h LazyLL.h LockFreeLL.h
 
 all: heavytest
 
