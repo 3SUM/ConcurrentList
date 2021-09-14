@@ -20,11 +20,11 @@ using namespace std;
 
 
 template <class T>
-class lazyList
+class LazyLL
 {
 public:
-    lazyList();
-    ~lazyList();
+    LazyLL();
+    ~LazyLL();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -47,7 +47,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-lazyList<T> :: lazyList()
+LazyLL<T> :: LazyLL()
 {
     head = new Node;
     head->key = {};
@@ -65,7 +65,7 @@ lazyList<T> :: lazyList()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-lazyList<T> :: ~lazyList()
+LazyLL<T> :: ~LazyLL()
 {
     deleteList();
 
@@ -78,7 +78,7 @@ lazyList<T> :: ~lazyList()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool lazyList<T> :: contains(T key)
+bool LazyLL<T> :: contains(T key)
 {
     // Set curr to head node
     Node *curr = head;
@@ -104,7 +104,7 @@ bool lazyList<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool lazyList<T> :: add(T key)
+bool LazyLL<T> :: add(T key)
 {
     while(true) {
         Node *pred = head;
@@ -161,7 +161,7 @@ bool lazyList<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool lazyList<T> :: remove(T key)
+bool LazyLL<T> :: remove(T key)
 {
     while(true) {
         Node *pred = head;
@@ -219,7 +219,7 @@ bool lazyList<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
  template <class T>
- void lazyList<T> :: printList()
+ void LazyLL<T> :: printList()
  {
      // Acquire head lock
      head->lock.lock();
@@ -242,7 +242,7 @@ bool lazyList<T> :: remove(T key)
  * deleted, and that pred points to curr.
  * **********************************************************************/
 template <class T>
-bool lazyList<T> :: validate(Node *pred, Node *curr)
+bool LazyLL<T> :: validate(Node *pred, Node *curr)
 {
     return  (!pred->marked && !curr->marked && pred->next == curr);
 }
@@ -251,7 +251,7 @@ bool lazyList<T> :: validate(Node *pred, Node *curr)
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void lazyList<T> :: deleteList()
+void LazyLL<T> :: deleteList()
 {
     Node *temp;
 

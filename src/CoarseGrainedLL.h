@@ -14,11 +14,11 @@ using namespace std;
 
 
 template <class T>
-class coarseList
+class CoarseGrainedLL
 {
 public:
-    coarseList();
-    ~coarseList();
+    CoarseGrainedLL();
+    ~CoarseGrainedLL();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -38,7 +38,7 @@ private:
  * Head will be used as a sentinel node
  * **********************************************************************/
 template <class T>
-coarseList<T> :: coarseList()
+CoarseGrainedLL<T> :: CoarseGrainedLL()
 {
     head = new Node;
     head->key = {};
@@ -49,7 +49,7 @@ coarseList<T> :: coarseList()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-coarseList<T> :: ~coarseList()
+CoarseGrainedLL<T> :: ~CoarseGrainedLL()
 {
     deleteList();
 
@@ -61,7 +61,7 @@ coarseList<T> :: ~coarseList()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool coarseList<T> :: contains(T key)
+bool CoarseGrainedLL<T> :: contains(T key)
 {
     // Acquire lock
     lock_guard<mutex>guard(lock);
@@ -97,7 +97,7 @@ bool coarseList<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool coarseList<T> :: add(T key)
+bool CoarseGrainedLL<T> :: add(T key)
 {
     // Acquire lock
     lock_guard<mutex>guard(lock);
@@ -137,7 +137,7 @@ bool coarseList<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool coarseList<T> :: remove(T key)
+bool CoarseGrainedLL<T> :: remove(T key)
 {
     // Acquire lock
     lock_guard<mutex>guard(lock);
@@ -174,7 +174,7 @@ bool coarseList<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
 template <class T>
-void coarseList<T> :: printList()
+void CoarseGrainedLL<T> :: printList()
 {
     // Acquire lock
     lock_guard<mutex>guard(lock);
@@ -193,7 +193,7 @@ void coarseList<T> :: printList()
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void coarseList<T> :: deleteList()
+void CoarseGrainedLL<T> :: deleteList()
 {
     Node *temp;
 

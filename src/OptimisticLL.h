@@ -18,11 +18,11 @@ using namespace std;
 
 
 template <class T>
-class optimisticList
+class OptimisticLL
 {
 public:
-    optimisticList();
-    ~optimisticList();
+    OptimisticLL();
+    ~OptimisticLL();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -44,7 +44,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-optimisticList<T> :: optimisticList()
+OptimisticLL<T> :: OptimisticLL()
 {
     head = new Node;
     head->key = {};
@@ -60,7 +60,7 @@ optimisticList<T> :: optimisticList()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-optimisticList<T> :: ~optimisticList()
+OptimisticLL<T> :: ~OptimisticLL()
 {
     deleteList();
 
@@ -73,7 +73,7 @@ optimisticList<T> :: ~optimisticList()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool optimisticList<T> :: contains(T key)
+bool OptimisticLL<T> :: contains(T key)
 {
     while(true) {
         Node *pred = head;
@@ -118,7 +118,7 @@ bool optimisticList<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool optimisticList<T> :: add(T key)
+bool OptimisticLL<T> :: add(T key)
 {
     while(true) {
         Node *pred = head;
@@ -174,7 +174,7 @@ bool optimisticList<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool optimisticList<T> :: remove(T key)
+bool OptimisticLL<T> :: remove(T key)
 {
     while(true) {
         Node *pred = head;
@@ -226,7 +226,7 @@ bool optimisticList<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
  template <class T>
- void optimisticList<T> :: printList()
+ void OptimisticLL<T> :: printList()
  {
      // Acquire head lock
      head->lock.lock();
@@ -248,7 +248,7 @@ bool optimisticList<T> :: remove(T key)
  * Validation checks that pred points to curr and is reachable from head.
  * **********************************************************************/
 template <class T>
-bool optimisticList<T> :: validate(Node *pred, Node *curr)
+bool OptimisticLL<T> :: validate(Node *pred, Node *curr)
 {
     // Set node to head
     Node *node = head;
@@ -273,7 +273,7 @@ bool optimisticList<T> :: validate(Node *pred, Node *curr)
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void optimisticList<T> :: deleteList()
+void OptimisticLL<T> :: deleteList()
 {
     Node *temp;
 

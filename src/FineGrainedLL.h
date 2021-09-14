@@ -15,11 +15,11 @@
 using namespace std;
 
 template <class T>
-class fineList
+class FineGrainedLL
 {
 public:
-    fineList();
-    ~fineList();
+    FineGrainedLL();
+    ~FineGrainedLL();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -40,7 +40,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-fineList<T> :: fineList()
+FineGrainedLL<T> :: FineGrainedLL()
 {
     head = new Node;
     head->key = {};
@@ -56,7 +56,7 @@ fineList<T> :: fineList()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-fineList<T> :: ~fineList()
+FineGrainedLL<T> :: ~FineGrainedLL()
 {
     deleteList();
 
@@ -69,7 +69,7 @@ fineList<T> :: ~fineList()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool fineList<T> :: contains(T key)
+bool FineGrainedLL<T> :: contains(T key)
 {
     // Acquire init(head) pred node lock
     head->lock.lock();
@@ -115,7 +115,7 @@ bool fineList<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool fineList<T> :: add(T key)
+bool FineGrainedLL<T> :: add(T key)
 {
     // Acquire init(head) pred node lock
     head->lock.lock();
@@ -165,7 +165,7 @@ bool fineList<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool fineList<T> :: remove(T key)
+bool FineGrainedLL<T> :: remove(T key)
 {
     // Acquire init(head) pred node lock
     head->lock.lock();
@@ -213,7 +213,7 @@ bool fineList<T> :: remove(T key)
  * Display contents of linked list
  * **********************************************************************/
 template <class T>
-void fineList<T> :: printList()
+void FineGrainedLL<T> :: printList()
 {
     // Acquire head lock
     head->lock.lock();
@@ -235,7 +235,7 @@ void fineList<T> :: printList()
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void fineList<T> :: deleteList()
+void FineGrainedLL<T> :: deleteList()
 {
     Node *temp;
 

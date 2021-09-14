@@ -12,11 +12,11 @@
 using namespace std;
 
 template <class T>
-class lockFreeList
+class LockFreeLL
 {
 public:
-    lockFreeList();
-    ~lockFreeList();
+    LockFreeLL();
+    ~LockFreeLL();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -87,7 +87,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  */
 template <class T>
-lockFreeList<T> :: lockFreeList()
+LockFreeLL<T> :: LockFreeLL()
 {
     head = new Node(INT_MIN);
 
@@ -102,7 +102,7 @@ lockFreeList<T> :: lockFreeList()
  * Deallocate linked list memory
  */
 template <class T>
-lockFreeList<T> :: ~lockFreeList()
+LockFreeLL<T> :: ~LockFreeLL()
 {
     deleteList();
 
@@ -117,7 +117,7 @@ lockFreeList<T> :: ~lockFreeList()
  * is it calls curr->next->get(marked) to test whether curr is marked.
  */
 template <class T>
-bool lockFreeList<T> :: contains(T key)
+bool LockFreeLL<T> :: contains(T key)
 {
     bool *marked = new bool;
 
@@ -135,7 +135,7 @@ bool lockFreeList<T> :: contains(T key)
  * node only if pred is unmarked and refers to curr.
  */
 template <class T>
-bool lockFreeList<T> :: add(T key)
+bool LockFreeLL<T> :: add(T key)
 {
     while(true) {
         Window window(head, key);
@@ -159,7 +159,7 @@ bool lockFreeList<T> :: add(T key)
  * marks the node for removal.
  */
 template <class T>
-bool lockFreeList<T> :: remove(T key)
+bool LockFreeLL<T> :: remove(T key)
 {
     bool snip = false;
 
@@ -186,7 +186,7 @@ bool lockFreeList<T> :: remove(T key)
  * Display contents of linked list
  */
  template <class T>
- void lockFreeList<T> :: printList()
+ void LockFreeLL<T> :: printList()
  {
      // Set curr to head->next since head is a sentinel node
      Node *curr = head;
@@ -202,7 +202,7 @@ bool lockFreeList<T> :: remove(T key)
  * Delete contents of linked list
  */
 template <class T>
-void lockFreeList<T> :: deleteList()
+void LockFreeLL<T> :: deleteList()
 {
     Node *temp;
 
