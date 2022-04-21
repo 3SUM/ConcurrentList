@@ -10,7 +10,7 @@
 
 Concurrent Linked List Implementations in C++
 
-If you have questions or concerns please feel free to contact me here or on **Discord @icantcode#9343**.
+If you have questions or concerns please feel free to contact me here or on **Discord @icantcode#7527**.
 
 ## Contents
 
