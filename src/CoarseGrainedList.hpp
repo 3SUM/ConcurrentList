@@ -58,25 +58,21 @@ CoarseGrainedList<T>::~CoarseGrainedList() {
 
 template <class T>
 T CoarseGrainedList<T>::front() const {
-    std::lock_guard<std::mutex> guard(lock);
     return head != nullptr ? head->key : T();
 }
 
 template <class T>
 T CoarseGrainedList<T>::back() const {
-    std::lock_guard<std::mutex> guard(lock);
     return tail != nullptr ? tail->key : T();
 }
 
 template <class T>
 bool CoarseGrainedList<T>::empty() const {
-    std::lock_guard<std::mutex> guard(lock);
     return head == nullptr && tail == nullptr;
 }
 
 template <class T>
 int CoarseGrainedList<T>::size() const {
-    std::lock_guard<std::mutex> guard(lock);
     return list_size;
 }
 
