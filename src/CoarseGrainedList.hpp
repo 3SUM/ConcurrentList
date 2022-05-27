@@ -26,7 +26,6 @@ class CoarseGrainedList {
     void pop_back();
     void print_forwards();
     void print_backwards();
-    void deleteList();
 
    private:
     struct Node {
@@ -42,6 +41,7 @@ class CoarseGrainedList {
     Node *head;
     Node *tail;
     std::mutex lock;
+    void delete_list();
 };
 
 template <class T>
@@ -53,26 +53,30 @@ CoarseGrainedList<T>::CoarseGrainedList() {
 
 template <class T>
 CoarseGrainedList<T>::~CoarseGrainedList() {
-    deleteList();
+    delete_list();
 }
 
 template <class T>
 T CoarseGrainedList<T>::front() const {
+    std::lock_guard<std::mutex> guard(lock);
     return head != nullptr ? head->key : T();
 }
 
 template <class T>
 T CoarseGrainedList<T>::back() const {
+    std::lock_guard<std::mutex> guard(lock);
     return tail != nullptr ? tail->key : T();
 }
 
 template <class T>
 bool CoarseGrainedList<T>::empty() const {
+    std::lock_guard<std::mutex> guard(lock);
     return head == nullptr && tail == nullptr;
 }
 
 template <class T>
 int CoarseGrainedList<T>::size() const {
+    std::lock_guard<std::mutex> guard(lock);
     return list_size;
 }
 
@@ -136,7 +140,7 @@ void CoarseGrainedList<T>::print_backwards() {
 }
 
 template <class T>
-void CoarseGrainedList<T>::deleteList() {
+void CoarseGrainedList<T>::delete_list() {
     std::lock_guard<std::mutex> guard(lock);
 
     Node *itr = head;
