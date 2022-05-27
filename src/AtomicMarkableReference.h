@@ -1,13 +1,5 @@
-/*
- * @author	Luis Maya Aranda
- * @date	02/16/19
- * @AtomicMarkableReference implementation in C++
- */
-
 #include <atomic>
 #include <iostream>
-
-using namespace std;
 
 /*
  * Struct for atomic markable reference

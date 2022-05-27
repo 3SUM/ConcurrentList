@@ -1,14 +1,14 @@
 <br>
 
 <p align="center">
-<a href="https://github.com/3SUM"><img width="200" src="./logo/set.png" alt="Set logo"></a>
+<a href="https://github.com/3SUM"><img width="200" src="./logo/set.png" alt="ConcurrentList logo"></a>
 </p>
 
 <br>
 
-# Set
+# ConcurrentList
 
-Concurrent Linked List Implementations in C++
+Concurrent List Implementations in C++
 
 If you have questions or concerns please feel free to contact me here or on **Discord @icantcode#7527**.
 
