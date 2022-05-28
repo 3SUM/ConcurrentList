@@ -1,5 +1,6 @@
 /*************************************************************************
- * Luis Maya
+ * Luis Maya Aranda
+ *
  * Lazy Synchronization Linked List
  * The next step is to refine the Optimistic Synchronization algorithm so
  * that contains() calls are wait-free, and add() and remove() methods,
@@ -11,18 +12,18 @@
  * invariant that every unmarked node is reachable. If a traversing
  * thread does not find a node, or finds it marked, then the item is not
  * in the set.
+ *
  * **********************************************************************/
-#include <cstdlib>
+#pragma once
+
 #include <iostream>
 #include <mutex>
 
-using namespace std;
-
 template <class T>
-class LazyLL {
+class LazyList {
    public:
-    LazyLL();
-    ~LazyLL();
+    LazyList();
+    ~LazyList();
     bool contains(T);
     bool add(T);
     bool remove(T);
@@ -46,7 +47,7 @@ class LazyLL {
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-LazyLL<T>::LazyLL() {
+LazyList<T>::LazyList() {
     head = new Node;
     head->key = {};
     head->marked = false;
@@ -63,7 +64,7 @@ LazyLL<T>::LazyLL() {
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-LazyLL<T>::~LazyLL() {
+LazyList<T>::~LazyList() {
     deleteList();
 
     delete head;
@@ -75,7 +76,7 @@ LazyLL<T>::~LazyLL() {
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T>::contains(T key) {
+bool LazyList<T>::contains(T key) {
     // Set curr to head node
     Node *curr = head;
 
@@ -100,7 +101,7 @@ bool LazyLL<T>::contains(T key) {
  * and return true.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T>::add(T key) {
+bool LazyList<T>::add(T key) {
     while (true) {
         Node *pred = head;
         Node *curr = head->next;
@@ -156,7 +157,7 @@ bool LazyLL<T>::add(T key) {
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T>::remove(T key) {
+bool LazyList<T>::remove(T key) {
     while (true) {
         Node *pred = head;
         Node *curr = head->next;
@@ -188,7 +189,7 @@ bool LazyLL<T>::remove(T key) {
             }
             // Else, remove key from list, release locks and return true
             else {
-                //Node *temp = curr;
+                // Node *temp = curr;
 
                 // Logical removal
                 curr->marked = true;
@@ -196,7 +197,7 @@ bool LazyLL<T>::remove(T key) {
                 // Physical removal
                 pred->next = curr->next;
 
-                //delete temp;
+                // delete temp;
 
                 pred->lock.unlock();
                 curr->lock.unlock();
@@ -213,7 +214,7 @@ bool LazyLL<T>::remove(T key) {
  * Display contents of linked list
  * **********************************************************************/
 template <class T>
-void LazyLL<T>::printList() {
+void LazyList<T>::printList() {
     // Acquire head lock
     head->lock.lock();
 
@@ -235,7 +236,7 @@ void LazyLL<T>::printList() {
  * deleted, and that pred points to curr.
  * **********************************************************************/
 template <class T>
-bool LazyLL<T>::validate(Node *pred, Node *curr) {
+bool LazyList<T>::validate(Node *pred, Node *curr) {
     return (!pred->marked && !curr->marked && pred->next == curr);
 }
 
@@ -243,7 +244,7 @@ bool LazyLL<T>::validate(Node *pred, Node *curr) {
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void LazyLL<T>::deleteList() {
+void LazyList<T>::deleteList() {
     Node *temp;
 
     while (head->next != tail) {

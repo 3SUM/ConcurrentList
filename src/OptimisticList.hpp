@@ -1,5 +1,6 @@
 /*************************************************************************
- * Luis Maya
+ * Luis Maya Aranda
+ *
  * Optimistic Synchronization Linked List
  * Although fine-grained locking is an improvement over single, coarse-grained
  * lock, it still imposes a potentially long sequence of lock acquisitions
@@ -9,26 +10,25 @@
  * the locked nodes are correct. If a synchronization conflict causes the wrong
  * nodes to be locked, then release the locks and start over. Normally this
  * kind of conflict is rare.
+ *
  * **********************************************************************/
+#pragma once
+
 #include <iostream>
 #include <mutex>
-#include <cstdlib>
-
-using namespace std;
-
 
 template <class T>
-class OptimisticLL
-{
-public:
-    OptimisticLL();
-    ~OptimisticLL();
+class OptimisticList {
+   public:
+    OptimisticList();
+    ~OptimisticList();
     bool contains(T);
     bool add(T);
     bool remove(T);
     void printList();
     void deleteList();
-private:
+
+   private:
     struct Node {
         T key;
         Node *next;
@@ -44,8 +44,7 @@ private:
  * Head and tail will be used as a sentinel nodes
  * **********************************************************************/
 template <class T>
-OptimisticLL<T> :: OptimisticLL()
-{
+OptimisticList<T>::OptimisticList() {
     head = new Node;
     head->key = {};
 
@@ -60,8 +59,7 @@ OptimisticLL<T> :: OptimisticLL()
  * Deallocate linked list memory
  * **********************************************************************/
 template <class T>
-OptimisticLL<T> :: ~OptimisticLL()
-{
+OptimisticList<T>::~OptimisticList() {
     deleteList();
 
     delete head;
@@ -73,16 +71,15 @@ OptimisticLL<T> :: ~OptimisticLL()
  * the linked list. If found, return true, else return false.
  * **********************************************************************/
 template <class T>
-bool OptimisticLL<T> :: contains(T key)
-{
-    while(true) {
+bool OptimisticList<T>::contains(T key) {
+    while (true) {
         Node *pred = head;
         Node *curr = head->next;
 
         // While not at the of the linked list
-        while(curr != tail) {
+        while (curr != tail) {
             // If current key is >= key, break out of traversal
-            if(curr->key >= key)
+            if (curr->key >= key)
                 break;
 
             // Set pred to curr node
@@ -97,7 +94,7 @@ bool OptimisticLL<T> :: contains(T key)
         curr->lock.lock();
 
         // Validate we locked correct nodes
-        if(validate(pred, curr)) {
+        if (validate(pred, curr)) {
             // If valid, release pred and curr locks
             pred->lock.unlock();
             curr->lock.unlock();
@@ -118,16 +115,15 @@ bool OptimisticLL<T> :: contains(T key)
  * and return true.
  * **********************************************************************/
 template <class T>
-bool OptimisticLL<T> :: add(T key)
-{
-    while(true) {
+bool OptimisticList<T>::add(T key) {
+    while (true) {
         Node *pred = head;
         Node *curr = head->next;
 
         // While not at the of the linked list
-        while(curr != tail) {
+        while (curr != tail) {
             // If current key is >= key, break out of traversal
-            if(curr->key >= key)
+            if (curr->key >= key)
                 break;
 
             // Set pred to curr node
@@ -142,9 +138,9 @@ bool OptimisticLL<T> :: add(T key)
         curr->lock.lock();
 
         // Validate we locked correct nodes
-        if(validate(pred,curr)) {
+        if (validate(pred, curr)) {
             // If valid & key is found in list, release locks and return false
-            if(curr != tail && curr->key == key) {
+            if (curr != tail && curr->key == key) {
                 pred->lock.unlock();
                 curr->lock.unlock();
                 return false;
@@ -174,16 +170,15 @@ bool OptimisticLL<T> :: add(T key)
  * parameter is found in the linked list, remove it and return true.
  * **********************************************************************/
 template <class T>
-bool OptimisticLL<T> :: remove(T key)
-{
-    while(true) {
+bool OptimisticList<T>::remove(T key) {
+    while (true) {
         Node *pred = head;
         Node *curr = head->next;
 
         // While not at the of the linked list
-        while(curr != tail) {
+        while (curr != tail) {
             // If current key is >= key, break out of traversal
-            if(curr->key >= key)
+            if (curr->key >= key)
                 break;
 
             // Set pred to curr node
@@ -198,18 +193,18 @@ bool OptimisticLL<T> :: remove(T key)
         curr->lock.lock();
 
         // Validate we locked correct nodes
-        if(validate(pred, curr)) {
+        if (validate(pred, curr)) {
             // If valid & key is not found in list, release locks and return false
-            if(curr != tail && curr->key != key) {
+            if (curr != tail && curr->key != key) {
                 pred->lock.unlock();
                 curr->lock.unlock();
                 return false;
             }
             // Else, remove key from list, release locks and return true
             else {
-                //Node *temp = curr;
+                // Node *temp = curr;
                 pred->next = curr->next;
-                //delete temp;
+                // delete temp;
 
                 pred->lock.unlock();
                 curr->lock.unlock();
@@ -225,41 +220,39 @@ bool OptimisticLL<T> :: remove(T key)
 /*************************************************************************
  * Display contents of linked list
  * **********************************************************************/
- template <class T>
- void OptimisticLL<T> :: printList()
- {
-     // Acquire head lock
-     head->lock.lock();
+template <class T>
+void OptimisticList<T>::printList() {
+    // Acquire head lock
+    head->lock.lock();
 
-     // Set curr to head->next since head is a sentinel node
-     Node *curr = head->next;
+    // Set curr to head->next since head is a sentinel node
+    Node *curr = head->next;
 
-     // Traverse linked list and display contents
-     while(curr != tail) {
-         cout << curr->key << " ";
-         curr = curr->next;
-     }
+    // Traverse linked list and display contents
+    while (curr != tail) {
+        cout << curr->key << " ";
+        curr = curr->next;
+    }
 
-     // Release head lock
-     head->lock.unlock();
- }
+    // Release head lock
+    head->lock.unlock();
+}
 
 /*************************************************************************
  * Validation checks that pred points to curr and is reachable from head.
  * **********************************************************************/
 template <class T>
-bool OptimisticLL<T> :: validate(Node *pred, Node *curr)
-{
+bool OptimisticList<T>::validate(Node *pred, Node *curr) {
     // Set node to head
     Node *node = head;
 
     // While not at the of the linked list
-    while(node != tail) {
+    while (node != tail) {
         // If node key > pred key, incorrect node, break and return false
-        if(node->key > pred->key)
+        if (node->key > pred->key)
             break;
         // If pred is reachable from head
-        if(node == pred)
+        if (node == pred)
             // Return true if pred points to curr, else false
             return (pred->next == curr);
 
@@ -273,11 +266,10 @@ bool OptimisticLL<T> :: validate(Node *pred, Node *curr)
  * Delete contents of linked list
  * **********************************************************************/
 template <class T>
-void OptimisticLL<T> :: deleteList()
-{
+void OptimisticList<T>::deleteList() {
     Node *temp;
 
-    while(head->next != tail) {
+    while (head->next != tail) {
         temp = head->next;
         head->next = temp->next;
         delete temp;
