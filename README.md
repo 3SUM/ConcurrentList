@@ -16,18 +16,16 @@ If you have questions or concerns please feel free to contact me here or on **Di
 
 #### Synchronization Methods
 
-- [Coarse-Grained Synchronization](/src/CoarseGrainedLL.h)
-- [Fine-Grained Synchronization](/src/FineGrainedLL.h)
-- [Optimistic Synchronization](/src/OptimisticLL.h)
-- [Lazy Synchronization](/src/LazyLL.h)
-- [Lock-Free](/src/LockFreeLL.h)
+- [Coarse-Grained Synchronization](/src/CoarseGrainedList.hpp)
+- [Fine-Grained Synchronization](/src/FineGrainedList.hpp)
+- [Optimistic Synchronization](/src/OptimisticList.hpp)
+- [Lazy Synchronization](/src/LazyList.hpp)
+- [Lock-Free](/src/LockFreeList.hpp)
 
-## How to Test
+## Usage
 
-#### Testing of all synchronization methods is provided by [heavytest](/src/heavytest.cpp).
 ```
-make
-./heavytest
+TBA
 ```
 
 ## License
